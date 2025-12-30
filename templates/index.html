@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Invoice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Create New Invoice</h2>
+        
+        <form method="POST" action="/create-invoice" id="invoiceForm">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Customer Name</label>
+                    <input type="text" name="customer_name" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Phone Number</label>
+                    <input type="text" name="phone" class="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold mb-4 border-b pb-2">Services</h3>
+                <div id="service-rows">
+                    <div class="grid grid-cols-12 gap-4 mb-4 items-end service-row">
+                        <div class="col-span-6">
+                            <label class="text-xs font-bold text-gray-500 uppercase">Description</label>
+                            <input type="text" name="service_name[]" required class="block w-full border border-gray-300 rounded-md p-2">
+                        </div>
+                        <div class="col-span-3">
+                            <label class="text-xs font-bold text-gray-500 uppercase">Price (₹)</label>
+                            <input type="number" name="price[]" required class="block w-full border border-gray-300 rounded-md p-2">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="text-xs font-bold text-gray-500 uppercase">GST %</label>
+                            <input type="number" name="gst_percent[]" value="18" class="block w-full border border-gray-300 rounded-md p-2">
+                        </div>
+                        <div class="col-span-1">
+                            <button type="button" onclick="removeRow(this)" class="text-red-500 hover:text-red-700 font-bold p-2">✕</button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="addServiceRow()" class="mt-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition">+ Add Service</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 bg-blue-50 p-4 rounded-lg">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Payment Mode</label>
+                    <select name="payment_mode" class="mt-1 block w-full border border-gray-300 rounded-md p-2 bg-white">
+                        <option value="Cash">Cash</option>
+                        <option value="UPI">UPI</option>
+                        <option value="Card">Card</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Payment Status</label>
+                    <select name="payment_type" class="mt-1 block w-full border border-gray-300 rounded-md p-2 bg-white">
+                        <option value="Advance">Advance</option>
+                        <option value="Final">Final</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow-lg">Generate Invoice</button>
+        </form>
+    </div>
+
+    <script>
+        function addServiceRow() {
+            const container = document.getElementById('service-rows');
+            const row = document.querySelector('.service-row').cloneNode(true);
+            row.querySelectorAll('input').forEach(input => input.value = input.name === 'gst_percent[]' ? '18' : '');
+            container.appendChild(row);
+        }
+
+        function removeRow(btn) {
+            const rows = document.querySelectorAll('.service-row');
+            if (rows.length > 1) {
+                btn.closest('.service-row').remove();
+            }
+        }
+    </script>
+</body>
+</html>
